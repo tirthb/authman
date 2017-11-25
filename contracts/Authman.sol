@@ -1,5 +1,3 @@
-//TODO: remove warnings
-
 pragma solidity ^0.4.11;
 
 import "./helper/strings.sol";
