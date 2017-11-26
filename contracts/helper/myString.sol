@@ -3,12 +3,12 @@ pragma solidity ^0.4.11;
 library myString {
 
   //https://ethereum.stackexchange.com/questions/6591/conversion-of-uint-to-string
-  function uintToBytes(uint v) pure internal returns (string ret) {
+  function uintToBytes(uint v) constant internal returns (string ret) {
     
     return bytes32ToString(bytes32(v));
   }
   
-  function bytes32ToString (bytes32 data) pure internal returns (string) {
+  function bytes32ToString (bytes32 data) constant internal returns (string) {
     bytes memory bytesString = new bytes(32);
     for (uint j=0; j<32; j++) {
         byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
@@ -20,7 +20,7 @@ library myString {
   }
 
   //https://ethereum.stackexchange.com/questions/729/how-to-concatenate-strings-in-solidity
-  function strConcat(string _a, string _b, string _c, string _d, string _e) pure internal returns (string){
+  function strConcat(string _a, string _b, string _c, string _d, string _e) constant internal returns (string){
     bytes memory _ba = bytes(_a);
     bytes memory _bb = bytes(_b);
     bytes memory _bc = bytes(_c);
@@ -37,19 +37,19 @@ library myString {
     return string(babcde);
   }
 
-  function strConcat(string _a, string _b, string _c, string _d) pure internal returns (string) {
+  function strConcat(string _a, string _b, string _c, string _d) constant internal returns (string) {
       return strConcat(_a, _b, _c, _d, "");
   }
 
-  function strConcat(string _a, string _b, string _c) pure internal returns (string) {
+  function strConcat(string _a, string _b, string _c) constant internal returns (string) {
       return strConcat(_a, _b, _c, "", "");
   }
 
-  function strConcat(string _a, string _b) pure internal returns (string) {
+  function strConcat(string _a, string _b) constant internal returns (string) {
       return strConcat(_a, _b, "", "", "");
   }
 
-  function substring(string str, uint startIndex, uint endIndex) pure internal returns (string) {
+  function substring(string str, uint startIndex, uint endIndex) constant internal returns (string) {
     bytes memory strBytes = bytes(str);
     bytes memory result = new bytes(endIndex-startIndex);
     for(uint i = startIndex; i < endIndex; i++) {

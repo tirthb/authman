@@ -12,10 +12,10 @@ contract Main
 {
 
   using strings for *;
-  address public ssnRegex;
-  address public dobRegex;
-  address public phoneRegex;
-  address public pinRegex;
+  address ssnRegex;
+  address dobRegex;
+  address phoneRegex;
+  address pinRegex;
 
   struct Authman {
     bytes32 guid;
@@ -195,7 +195,7 @@ contract Main
     return keccak256(guid);
   }
 
-  function createClaimHash(string phone, string pin) pure private returns (bytes32) {
+  function createClaimHash(string phone, string pin) private returns (bytes32) {
     return keccak256(myString.strConcat(phone,pin));
   }
 
@@ -243,7 +243,7 @@ contract Main
 
   }
 
-  function getCounter() public view returns (uint) {
+  function getCounter() public returns (uint) {
     return counter;
   }
 

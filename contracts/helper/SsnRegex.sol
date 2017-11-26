@@ -6,7 +6,7 @@ contract SsnRegex {
     function (byte) constant internal returns (State memory) func;
   }
 
-  string public constant regex = "[0-8]{3}\\-?[0-9]{2}\-?[0-9]{4}";
+  string public constant regex = "[0-8][0-9]{8}";
 
   function s0(byte c) constant internal returns (State memory) {
     c = c;
@@ -22,7 +22,7 @@ contract SsnRegex {
   }
 
   function s2(byte c) constant internal returns (State memory) {
-    if (c >= 48 && c <= 56) {
+    if (c >= 48 && c <= 57) {
       return State(false, s3);
     }
 
@@ -30,7 +30,7 @@ contract SsnRegex {
   }
 
   function s3(byte c) constant internal returns (State memory) {
-    if (c >= 48 && c <= 56) {
+    if (c >= 48 && c <= 57) {
       return State(false, s4);
     }
 
@@ -38,7 +38,7 @@ contract SsnRegex {
   }
 
   function s4(byte c) constant internal returns (State memory) {
-    if (c == 45) {
+    if (c >= 48 && c <= 57) {
       return State(false, s5);
     }
 
@@ -62,7 +62,7 @@ contract SsnRegex {
   }
 
   function s7(byte c) constant internal returns (State memory) {
-    if (c == 45) {
+    if (c >= 48 && c <= 57) {
       return State(false, s8);
     }
 
@@ -79,29 +79,13 @@ contract SsnRegex {
 
   function s9(byte c) constant internal returns (State memory) {
     if (c >= 48 && c <= 57) {
-      return State(false, s10);
+      return State(true, s10);
     }
 
     return State(false, s0);
   }
 
   function s10(byte c) constant internal returns (State memory) {
-    if (c >= 48 && c <= 57) {
-      return State(false, s11);
-    }
-
-    return State(false, s0);
-  }
-
-  function s11(byte c) constant internal returns (State memory) {
-    if (c >= 48 && c <= 57) {
-      return State(true, s12);
-    }
-
-    return State(false, s0);
-  }
-
-  function s12(byte c) constant internal returns (State memory) {
     // silence unused var warning
     c = c;
 
