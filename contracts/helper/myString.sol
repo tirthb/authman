@@ -8,15 +8,30 @@ library myString {
     return bytes32ToString(bytes32(v));
   }
   
-  function bytes32ToString (bytes32 data) constant internal returns (string) {
+  function bytes32ToString (bytes32 x) constant internal returns (string) {
     bytes memory bytesString = new bytes(32);
     for (uint j=0; j<32; j++) {
-        byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+        byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
         if (char != 0) {
             bytesString[j] = char;
         }
     }
     return string(bytesString);
+
+    /* bytes memory bytesString = new bytes(32);
+    uint charCount = 0;
+    for (uint j = 0; j < 32; j++) {
+        byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
+        if (char != 0) {
+            bytesString[charCount] = char;
+            charCount++;
+        }
+    }
+    bytes memory bytesStringTrimmed = new bytes(charCount);
+    for (j = 0; j < charCount; j++) {
+        bytesStringTrimmed[j] = bytesString[j];
+    }
+    return string(bytesStringTrimmed); */
   }
 
   //https://ethereum.stackexchange.com/questions/729/how-to-concatenate-strings-in-solidity

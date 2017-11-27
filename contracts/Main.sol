@@ -42,6 +42,7 @@ contract Main
 
   // Used for log.info.
   event Info(string message);
+  event InfoHash(string message, bytes32 hash);
   
   //key:ssnHash
   mapping(bytes32 => Authman) authmanBySsnHash;
@@ -92,7 +93,7 @@ contract Main
     Authman memory authman = authmanBySsnHash[hash];
 
     //if authman exists
-    if (authman.guid.length > 0) {
+    if (authman.guid[0] != 0) {
       //authman exists, check if claimed
       //if claimed, throw error
       if (authman.isClaimed) {
@@ -101,7 +102,7 @@ contract Main
       }
       
       //if not claimed, update Authman
-      Info("Authman exists but is not claimed. Updating authman ".toSlice().concat(myString.bytes32ToString(authman.guid).toSlice()));
+      InfoHash("Authman exists but is not claimed. Updating authman...", authman.guid);
 
       authman.firstName = firstName;
       authman.lastName = lastName;
@@ -112,6 +113,8 @@ contract Main
       authman.updateDate = now;
       
       saveAuthman(authman, authman.counter, authman.ssnHash);
+
+      InfoHash("Updated authman.", authman.guid);
 
     } else {
       //if new
@@ -134,6 +137,8 @@ contract Main
       newAuthman.guid = createGuid(newAuthman.ssnHash,newAuthman.counter);
       
       saveAuthman(newAuthman, counter, hash);
+
+      InfoHash("Saved new authman.", authman.guid);
     }
   }
   
