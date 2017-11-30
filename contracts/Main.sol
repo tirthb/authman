@@ -43,6 +43,24 @@ contract Main
   // Used for log.info.
   event Info(string message);
   event InfoHash(string message, bytes32 hash);
+  event InfoAuthman1(
+          string message, 
+          bytes32 guid,
+          string firstName,
+          string lastName,
+          uint counter,
+          bytes32 ssnHash,
+          bytes32 claimHash,
+          string mobilePhone);
+
+   event InfoAuthman2(
+          string createByName,
+          uint createDate,
+          string updateByName,
+          uint updateDate,
+          uint claimedDate,
+          bytes32 claimedAuthmanIdHash,
+          bytes32 previousGuid);
   
   //key:ssnHash
   mapping(bytes32 => Authman) authmanBySsnHash;
@@ -102,19 +120,20 @@ contract Main
       }
       
       //if not claimed, update Authman
-      InfoHash("Authman exists but is not claimed. Updating authman...", authman.guid);
+      logAuthman("Authman exists but is not claimed. Updating authman.... Current authman: ", authman);
 
       authman.firstName = firstName;
       authman.lastName = lastName;
       authman.mobilePhone = mobilePhone;
-      authman.claimHash = createClaimHash(mobilePhone, pin);
+      authman.claimHash = createClaimHash(ssn, mobilePhone, pin);
       authman.updateById = requestedById;
       authman.updateByName = requestedByName;
       authman.updateDate = now;
       
       saveAuthman(authman, authman.counter, authman.ssnHash);
 
-      InfoHash("Updated authman.", authman.guid);
+      //InfoHash("Updated authman.", authman.guid);
+      logAuthman("Updated authman:", authman);
 
     } else {
       //if new
@@ -123,7 +142,7 @@ contract Main
       newAuthman.firstName = firstName;
       newAuthman.lastName = lastName;
       newAuthman.mobilePhone = mobilePhone;
-      newAuthman.claimHash = createClaimHash(mobilePhone, pin);
+      newAuthman.claimHash = createClaimHash(ssn, mobilePhone, pin);
       newAuthman.createById = requestedById;
       newAuthman.createByName = requestedByName;
       newAuthman.createDate = now;
@@ -138,8 +157,33 @@ contract Main
       
       saveAuthman(newAuthman, counter, hash);
 
-      InfoHash("Saved new authman.", authman.guid);
+      //InfoHash("Saved new authman.", authman.guid);
+      logAuthman("New authman:", newAuthman);
     }
+  }
+
+  function logAuthman(string message, Authman authman) private {
+    InfoAuthman1(message,
+                  authman.guid,
+                  authman.firstName,
+                  authman.lastName,
+                  authman.counter,
+                  authman.ssnHash,
+                  authman.claimHash,
+                  authman.mobilePhone
+      );
+    logAuthmanRest(authman);
+  }
+
+  function logAuthmanRest(Authman authman) private {
+    InfoAuthman2(  authman.createByName,
+                  authman.createDate,
+                  authman.updateByName,
+                  authman.updateDate,
+                  authman.claimedDate,
+                  authman.claimedAuthmanIdHash,
+                  authman.previousGuid
+      );
   }
   
   function saveAuthman(Authman authman, uint counter1, bytes32 hash) private {
@@ -200,8 +244,8 @@ contract Main
     return keccak256(guid);
   }
 
-  function createClaimHash(string phone, string pin) private returns (bytes32) {
-    return keccak256(myString.strConcat(phone,pin));
+  function createClaimHash(string ssn, string phone, string pin) private returns (bytes32) {
+    return keccak256(myString.strConcat(ssn, phone, pin));
   }
 
   function createSsnHash(string ssn, string dob) private returns (bytes32) {

@@ -3,7 +3,7 @@
 
 var auth; Main.deployed().then(function(deployed){auth=deployed;});
 auth.createOrUpdateAuthmanGuid("titu","bhowmick","1234","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message);});
-auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message + " " + ret.logs[0].args.hash);console.log(ret.logs[1].args.message + " " + ret.logs[0].args.hash);});
+auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message + " " + JSON.stringify(ret.logs[0].args.authman);console.log(ret.logs[1].args.message + " " + JSON.stringify(ret.logs[0].args.authman));});
 
 var mt; MyNewTest.deployed().then(function(deployed){mt=deployed;});
 mt.testConcat("titu").then(function(ret){console.log(ret.logs[0].args.message);});
@@ -14,3 +14,52 @@ mt.testPrintHashAsString("titu").then(function(ret){console.log(ret.logs[0].args
 (enter) last command entered (step next)
 (o) step over, (i) step into, (u) step out, (n) step next
 (;) step instruction, (p) print instruction, (h) print this help, (q) quit
+
+auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb")
+.then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message); console.log("authman: " + JSON.stringify(ret.logs[0].args.authman));});
+
+var ret; auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(o){ret = o;});
+
+function logAuthman(o){
+	for (i = 0; i < o.logs.length; i++) { 
+	    console.log("================ log" + i + "================");
+
+	    if (logs[0].event == 'InfoAuthman') {
+
+	    	console.log("message: " + logs[0].args.message);
+        console.log("guid: " + logs[0].args.guid);
+        console.log("firstName: " + logs[0].args.firstName);
+        console.log("lastName: " + logs[0].args.lastName);
+        console.log("counter: " + logs[0].args.counter);
+        console.log("ssnHash: " + logs[0].args.ssnHash);
+        console.log("claimHash: " + logs[0].args.claimHash);
+        console.log("mobilePhone: " + logs[0].args.mobilePhone);
+
+	    }
+
+	    if (logs[0].event == 'InfoAuthman2') {
+
+	    	console.log("createByName: " + logs[0].args.createByName);
+        console.log("createDate: " + logs[0].args.createDate);
+        console.log("updateByName: " + logs[0].args.updateByName);
+        console.log("updateDate: " + logs[0].args.updateDate);
+        console.log("claimedDate: " + logs[0].args.claimedDate);
+        console.log("claimedAuthmanIdHash: " + logs[0].args.claimedAuthmanIdHash);
+        console.log("previousGuid: " + logs[0].args.previousGuid);
+        
+	    }
+	}
+}
+
+
+		  
+          authman.createByName,
+          authman.createById,
+          authman.createDate,
+          authman.updateByName,
+          authman.updateById,
+          authman.updateDate,
+          authman.isClaimed,
+          authman.claimedDate,
+          authman.claimedAuthmanIdHash,
+          authman.previousGuid
