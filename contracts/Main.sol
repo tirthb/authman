@@ -99,8 +99,8 @@ contract Main
       AnyException("Date of birth is not valid. Should be of the format YYYY-MM-DD");
       return;
     }
-    //validate phone 10 digits [1-9][0-9]{9}
-    if (!validatePhone(mobilePhone)) {
+    //if mobile phone exists, validate phone 10 digits [1-9][0-9]{9}
+    if (bytes(mobilePhone).length > 0 && !validatePhone(mobilePhone)) {
 
       AnyException("Mobile phone is not valid. Should be 10 digits with no other characters.");
       return;
@@ -132,7 +132,7 @@ contract Main
       authman.firstName = firstName;
       authman.lastName = lastName;
       authman.mobilePhone = mobilePhone;
-      authman.claimHash = createClaimHash(authman.ssnHash, mobilePhone, pin);
+      authman.claimHash = createClaimHash(authman.guid, pin);
       authman.updateById = requestedById;
       authman.updateByName = requestedByName;
       authman.updateDate = now;
@@ -156,7 +156,7 @@ contract Main
         newAuthman.counter = counter;
         newAuthman.ssnHash = hash;
         newAuthman.guid = createGuid(newAuthman.ssnHash,newAuthman.counter);
-        newAuthman.claimHash = createClaimHash(newAuthman.guid, newAuthman.mobilePhone, pin);
+        newAuthman.claimHash = createClaimHash(newAuthman.guid, pin);
 
         saveAuthman(newAuthman);
         counter++;
@@ -228,111 +228,104 @@ contract Main
         return;
       }
 
-      bytes32 newClaimHash;
-      bool mobilePhoneExists = bytes(authman.mobilePhone).length > 0;
+      bytes32 newClaimHash = createClaimHash(authman.guid, pin);
 
-      //if mobilePhone exists
-      if (mobilePhoneExists) {
-        newClaimHash = createClaimHash(authman.guid, mobilePhone, pin);
-        } else {
-          newClaimHash = createClaimHash(authman.guid, "", pin);
-        }
+      if (newClaimHash != claimHash) {
+        AnyException("Mobile phone or pin is not valid.");
+        return;
+      }    
 
-        if (newClaimHash != claimHash) {
-          AnyException("Mobile phone or pin is not valid.");
-          return;
-        }    
+      //valid credentials
+      authman.isClaimed = true;
+      authman.claimedDate = now;
+      authman.claimedAuthmanIdHash = authmanIdHash;
+      authman.mobilePhone = mobilePhone;
+      saveAuthman(authman);
 
-        //valid credentials
-        authman.isClaimed = true;
-        authman.claimedDate = now;
-        authman.claimedAuthmanIdHash = authmanIdHash;
-        saveAuthman(authman);
+      logAuthman("Claimed authman.", authman);
 
-        logAuthman("Claimed authman.", authman);
+    }
 
+    function logAuthman(string message, Authman authman) private {
+      InfoAuthman1(message,
+        authman.guid,
+        authman.firstName,
+        authman.lastName,
+        authman.counter,
+        authman.ssnHash,
+        authman.claimHash,
+        authman.mobilePhone
+        );
+      logAuthmanRest(authman);
+    }
+
+    function logAuthmanRest(Authman authman) private {
+      InfoAuthman2(  authman.createByName,
+        authman.createDate,
+        authman.updateByName,
+        authman.updateDate,
+        authman.claimedDate,
+        authman.claimedAuthmanIdHash
+        );
+    }
+
+    function saveAuthman(Authman authman) private {
+      authmanBySsnHash[authman.ssnHash] = authman;
+      authmanByGuid[authman.guid] = authman;
+
+      if (authman.claimHash[0] > 0) {
+        authmanByClaimHash[authman.claimHash] = authman;
+      }
+      if (authman.claimedAuthmanIdHash[0] > 0) {
+        authmanByAuthmanIdHash[authman.claimedAuthmanIdHash] = authman;
+      }
+    }
+
+    function validateSsn(string ssn) private returns (bool) {
+
+      //cannot use https://regex101.com/r/rP8wL0/1 ^(?!(000|666|9))\d{3}-(?!00)\d{2}-(?!0000)\d{4}$|^(?!(000|666|9))\d{3}(?!00)\d{2}(?!0000)\d{4}$
+
+      if (ssnRegex == address(0)) {
+        ssnRegex = new SsnRegex();
       }
 
-      function logAuthman(string message, Authman authman) private {
-        InfoAuthman1(message,
-          authman.guid,
-          authman.firstName,
-          authman.lastName,
-          authman.counter,
-          authman.ssnHash,
-          authman.claimHash,
-          authman.mobilePhone
-          );
-        logAuthmanRest(authman);
+      SsnRegex s = SsnRegex(ssnRegex);
+      return s.matches(ssn);
+
+    }
+
+    function validateDob(string dob) private returns (bool) {
+
+      if (dobRegex == address(0)) {
+        dobRegex = new DobRegex();
       }
 
-      function logAuthmanRest(Authman authman) private {
-        InfoAuthman2(  authman.createByName,
-          authman.createDate,
-          authman.updateByName,
-          authman.updateDate,
-          authman.claimedDate,
-          authman.claimedAuthmanIdHash
-          );
+      DobRegex s = DobRegex(dobRegex);
+      return s.matches(dob);
+
+    }
+
+    function validatePhone(string phone) private returns (bool) {
+
+      if (phoneRegex == address(0)) {
+        phoneRegex = new PhoneRegex();
       }
 
-      function saveAuthman(Authman authman) private {
-        authmanBySsnHash[authman.ssnHash] = authman;
-        authmanByGuid[authman.guid] = authman;
+      PhoneRegex s = PhoneRegex(phoneRegex);
+      return s.matches(phone);
 
-        if (authman.claimHash[0] > 0) {
-          authmanByClaimHash[authman.claimHash] = authman;
-        }
-        if (authman.claimedAuthmanIdHash[0] > 0) {
-          authmanByAuthmanIdHash[authman.claimedAuthmanIdHash] = authman;
-        }
+    }
+
+    function validatePin(string pin) private returns (bool) {
+
+      if (pinRegex == address(0)) {
+        pinRegex = new PinRegex();
       }
 
-      function validateSsn(string ssn) private returns (bool) {
+      PinRegex s = PinRegex(pinRegex);
+      return s.matches(pin);
 
-        //cannot use https://regex101.com/r/rP8wL0/1 ^(?!(000|666|9))\d{3}-(?!00)\d{2}-(?!0000)\d{4}$|^(?!(000|666|9))\d{3}(?!00)\d{2}(?!0000)\d{4}$
-
-        if (ssnRegex == address(0)) {
-          ssnRegex = new SsnRegex();
-        }
-
-        SsnRegex s = SsnRegex(ssnRegex);
-        return s.matches(ssn);
-
-      }
-
-      function validateDob(string dob) private returns (bool) {
-
-        if (dobRegex == address(0)) {
-          dobRegex = new DobRegex();
-        }
-
-        DobRegex s = DobRegex(dobRegex);
-        return s.matches(dob);
-
-      }
-
-      function validatePhone(string phone) private returns (bool) {
-
-        if (phoneRegex == address(0)) {
-          phoneRegex = new PhoneRegex();
-        }
-
-        PhoneRegex s = PhoneRegex(phoneRegex);
-        return s.matches(phone);
-
-      }
-
-      function validatePin(string pin) private returns (bool) {
-
-        if (pinRegex == address(0)) {
-          pinRegex = new PinRegex();
-        }
-
-        PinRegex s = PinRegex(pinRegex);
-        return s.matches(pin);
-
-      }
+    }
 
     /*
     6 - 20 characers, 
@@ -395,8 +388,8 @@ contract Main
         return keccak256(guid);
       }
 
-      function createClaimHash(bytes32 hash, string phone, string pin) private returns (bytes32) {
-        return keccak256(myString.strConcat(myString.bytes32ToString(hash), phone, pin));
+      function createClaimHash(bytes32 hash, string pin) private returns (bytes32) {
+        return keccak256(myString.strConcat(myString.bytes32ToString(hash), pin));
       }
 
       function createSsnHash(string ssn, string dob) private returns (bytes32) {
