@@ -3,22 +3,12 @@
 
 var auth; Main.deployed().then(function(deployed){auth=deployed;});
 auth.createOrUpdateAuthmanGuid("titu","bhowmick","1234","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message);});
-auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message + " " + JSON.stringify(ret.logs[0].args.authman);console.log(ret.logs[1].args.message + " " + JSON.stringify(ret.logs[0].args.authman));});
-
-var mt; MyNewTest.deployed().then(function(deployed){mt=deployed;});
-mt.testConcat("titu").then(function(ret){console.log(ret.logs[0].args.message);});
-mt.testSliceConcat("titu").then(function(ret){console.log(ret.logs[0].args.message);});
-mt.testPrintHash("titu").then(function(ret){console.log(ret.logs[0].args.message);});
-mt.testPrintHashAsString("titu").then(function(ret){console.log(ret.logs[0].args.message);});
-
-(enter) last command entered (step next)
-(o) step over, (i) step into, (u) step out, (n) step next
-(;) step instruction, (p) print instruction, (h) print this help, (q) quit
-
-auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb")
-.then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message); console.log("authman: " + JSON.stringify(ret.logs[0].args.authman));});
-
 var ret; auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(o){ret = o;});
+ret.logs[0].args
+ret.logs[1].args
+ret.logs[2].args
+ret.logs[3].args
+
 
 function logAuthman(o){
 	for (i = 0; i < o.logs.length; i++) { 

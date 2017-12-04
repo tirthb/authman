@@ -78,7 +78,8 @@ contract Main
   uint counter = 0;
 
   //create or update authman
-  function createOrUpdateAuthmanGuid(string firstName, 
+  function createOrUpdateAuthmanGuid(
+    string firstName, 
     string lastName, 
     string ssn,
     string dob, //YYYY-MM-DD

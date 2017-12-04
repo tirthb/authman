@@ -15,6 +15,7 @@
       Info(out);
     }
 
+    ////https://ethereum.stackexchange.com/questions/6591/conversion-of-uint-to-string
     function bytes32ToString (bytes32 x) constant private returns (string) {
       bytes memory bytesString = new bytes(32);
       for (uint j=0; j<32; j++) {
