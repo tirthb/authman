@@ -4,56 +4,56 @@ import "./AuthmanCrud.sol";
 
 contract AuthmanSave is AuthmanCrud {
 
-function createOrUpdateAuthman(
-    address _address,
-    string firstName, 
-    string lastName, 
-    string ssn,
-    string dob, //YYYY-MM-DD
-    string pin, //4 digit
-    string mobilePhone //10 digit
-    ) 
-  public returns (uint index)
-  {
+	function createOrUpdateAuthman(
+		address _address,
+		string firstName, 
+		string lastName, 
+		string ssn,
+		string dob, //YYYY-MM-DD
+		string pin, //4 digit
+		string mobilePhone //10 digit
+		) 
+	public returns (uint index)
+	{
 
-    uint errorCode = 0;
+		uint errorCode = 0;
 
-    //validate ssn
-    if (!validateSsn(ssn)) {
-      AnyException("SSN is not valid.");
-      return errorCode;
-    }
-    //validate dob YYYY-MM-DD
-    if (!validateDob(dob)) {
-      AnyException("Date of birth is not valid. Should be of the format YYYY-MM-DD");
-      return errorCode;
-    }
-    //if mobile phone exists, validate phone 10 digits [1-9][0-9]{9}
-    if (bytes(mobilePhone).length > 0 && !validatePhone(mobilePhone)) {
-      AnyException("Mobile phone is not valid. Should be 10 digits with no other characters.");
-      return errorCode;
-    }
-    //validate pin 4 digits [0-9]{4}
-    if (!validatePin(pin)) {
-      AnyException("Pin is not valid. Should be 4 digits.");
-      return errorCode;
-    }
+		//validate ssn
+		if (!validateSsn(ssn)) {
+			AnyException("SSN is not valid.");
+			return errorCode;
+		}
+		//validate dob YYYY-MM-DD
+		if (!validateDob(dob)) {
+			AnyException("Date of birth is not valid. Should be of the format YYYY-MM-DD");
+			return errorCode;
+		}
+		//if mobile phone exists, validate phone 10 digits [1-9][0-9]{9}
+		if (bytes(mobilePhone).length > 0 && !validatePhone(mobilePhone)) {
+			AnyException("Mobile phone is not valid. Should be 10 digits with no other characters.");
+			return errorCode;
+		}
+		//validate pin 4 digits [0-9]{4}
+		if (!validatePin(pin)) {
+			AnyException("Pin is not valid. Should be 4 digits.");
+			return errorCode;
+		}
 
-    //evaluate sshHash and check if exists
-    var hash = createSsnHash(ssn, dob);
+		//evaluate sshHash and check if exists
+		var hash = createSsnHash(ssn, dob);
 
-    address savedAddress = authmanAddressBySsnHash[hash];
+		address savedAddress = authmanAddressBySsnHash[hash];
 
-    //if authman exists for the ssn hash
-    if (authmanByAddress[savedAddress].ssnHash[0] != 0) {
+		//if authman exists for the ssn hash
+		if (authmanByAddress[savedAddress].ssnHash[0] != 0) {
 
-      //make sure the supplied address is the same as saved address
-      if (_address != savedAddress) {
-        AnyException("Another address exists for the individual.");
-        return errorCode;
-      }
+			//make sure the supplied address is the same as saved address
+			if (_address != savedAddress) {
+				AnyException("Another address exists for the individual.");
+				return errorCode;
+			}
 
-      //make sure the supplied address is authman
+			//make sure the supplied address is authman
       /* if (!isAuthman(_address)) {
         AnyException("Invalid address.");
         return;
@@ -62,8 +62,8 @@ function createOrUpdateAuthman(
         //authman exists, check if claimed
         //if claimed, throw error
         if (authmanByAddress[savedAddress].isClaimed) {
-          AnyException("Authman is claimed. Cannot update Authman.");
-          return errorCode;
+        	AnyException("Authman is claimed. Cannot update Authman.");
+        	return errorCode;
         }
 
         //if not claimed, update Authman
@@ -82,24 +82,24 @@ function createOrUpdateAuthman(
 
         } else {
 
-          //new authman
-          if (isAuthman(_address)) {
-            AnyException("Address in use.");
-            return errorCode;
-          }
+        	//new authman
+        	if (isAuthman(_address)) {
+        		AnyException("Address in use.");
+        		return errorCode;
+        	}
 
-          authmanByAddress[_address].firstName = firstName;
-          authmanByAddress[_address].lastName = lastName;
-          authmanByAddress[_address].mobilePhone = mobilePhone;
-          authmanByAddress[_address].createBy = msg.sender;
-          authmanByAddress[_address].createDate = now;
-          authmanByAddress[_address].ssnHash = hash;
-          authmanByAddress[_address].index     = authmanIndex.push(_address) - 1;
-          authmanByAddress[_address].claimHash = createClaimHash(_address, pin);
+        	authmanByAddress[_address].firstName = firstName;
+        	authmanByAddress[_address].lastName = lastName;
+        	authmanByAddress[_address].mobilePhone = mobilePhone;
+        	authmanByAddress[_address].createBy = msg.sender;
+        	authmanByAddress[_address].createDate = now;
+        	authmanByAddress[_address].ssnHash = hash;
+        	authmanByAddress[_address].index     = authmanIndex.push(_address) - 1;
+        	authmanByAddress[_address].claimHash = createClaimHash(_address, pin);
 
-          saveAuthman(_address);
+        	saveAuthman(_address);
 
-          logAuthman("New authman:", authmanByAddress[_address]);
+        	logAuthman("New authman:", authmanByAddress[_address]);
         }
 
         return authmanByAddress[_address].index;
@@ -107,25 +107,25 @@ function createOrUpdateAuthman(
 
       //mobile phone is optional as banks may not have this information for current customers
       function createOrUpdateAuthman(
-        address _address,
-        string firstName, 
-        string lastName, 
-        string ssn,
-        string dob, //YYYY-MM-DD
-        string pin //4 digit (auto generated by banks, when customer is not present)
-        ) 
+      	address _address,
+      	string firstName, 
+      	string lastName, 
+      	string ssn,
+      	string dob, //YYYY-MM-DD
+      	string pin //4 digit (auto generated by banks, when customer is not present)
+      	) 
       public returns (uint index)
       {
 
-        return createOrUpdateAuthman(
-          _address,
-          firstName, 
-          lastName, 
-          ssn, 
-          dob, 
-          pin, 
-          "" //no mobile phone
-          );
+      	return createOrUpdateAuthman(
+      		_address,
+      		firstName, 
+      		lastName, 
+      		ssn, 
+      		dob, 
+      		pin, 
+      		"" //no mobile phone
+      		);
       }
-	
-}
+      
+    }
