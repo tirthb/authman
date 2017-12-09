@@ -2,23 +2,12 @@ pragma solidity ^0.4.6;
 
 import "./helper/strings.sol";
 import "./helper/myString.sol";
-import "./helper/SsnRegex.sol";
-import "./helper/DobRegex.sol";
-import "./helper/PhoneRegex.sol";
-import "./helper/PinRegex.sol";
-import "./helper/LowerAlphanumericStartsWithAlphabetRegex.sol";
-import "./helper/LowerAlphanumericRegex.sol";
+import "./helper/validator.sol";
 
 contract AuthmanCrud {
 
   using strings for *;
-  address ssnRegex;
-  address dobRegex;
-  address phoneRegex;
-  address pinRegex;
-  address lowerAlphaStartsWithAlphaRegex;
-  address lowerAlphaRegex;
-
+  
   struct Authman {
     uint index;
     string firstName;
@@ -107,13 +96,13 @@ contract AuthmanCrud {
   function getAddress(string ssn, string dob) returns (address) {
 
     //validate ssn
-    if (!validateSsn(ssn)) {
+    if (!validator.validateSsn(ssn)) {
 
       AnyException("SSN is not valid.");
       return;
     }
     //validate dob YYYY-MM-DD
-    if (!validateDob(dob)) {
+    if (!validator.validateDob(dob)) {
 
       AnyException("Date of birth is not valid. Should be of the format YYYY-MM-DD");
       return;
@@ -206,66 +195,17 @@ contract AuthmanCrud {
         }
       }
 
-      function validateSsn(string ssn) internal returns (bool) {
-
-        //cannot use https://regex101.com/r/rP8wL0/1 ^(?!(000|666|9))\d{3}-(?!00)\d{2}-(?!0000)\d{4}$|^(?!(000|666|9))\d{3}(?!00)\d{2}(?!0000)\d{4}$
-
-        if (ssnRegex == address(0)) {
-          ssnRegex = new SsnRegex();
-        }
-
-        SsnRegex s = SsnRegex(ssnRegex);
-        return s.matches(ssn);
-
-      }
-
-      function validateDob(string dob) internal returns (bool) {
-
-        if (dobRegex == address(0)) {
-          dobRegex = new DobRegex();
-        }
-
-        DobRegex s = DobRegex(dobRegex);
-        return s.matches(dob);
-
-      }
-
-      function validatePhone(string phone) internal returns (bool) {
-
-        if (phoneRegex == address(0)) {
-          phoneRegex = new PhoneRegex();
-        }
-
-        PhoneRegex s = PhoneRegex(phoneRegex);
-        return s.matches(phone);
-
-      }
-
-      function validatePin(string pin) internal returns (bool) {
-
-        if (pinRegex == address(0)) {
-          pinRegex = new PinRegex();
-        }
-
-        PinRegex s = PinRegex(pinRegex);
-        return s.matches(pin);
-
-      }
-
       function createClaimHash(address _address, string pin) internal returns (bytes32) {
         return keccak256(myString.strConcat(myString.addressToString(_address), pin));
       }
 
       function createSsnHash(string ssn, string dob) internal returns (bytes32) {
 
-        //removing dashes from ssn if any
-        string memory newSsn = removeDashesFromSsn(ssn);
-
         //split ssn into 3 parts of 3 chars
         string [] memory ssnArr = new string[](3);
-        ssnArr[0] = myString.substring(newSsn, 0, 3);
-        ssnArr[1] = myString.substring(newSsn, 3, 6);
-        ssnArr[2] = myString.substring(newSsn, 6, 9);
+        ssnArr[0] = myString.substring(ssn, 0, 3);
+        ssnArr[1] = myString.substring(ssn, 3, 6);
+        ssnArr[2] = myString.substring(ssn, 6, 9);
 
         //split dob by dashes
         var dobSlice = dob.toSlice();
@@ -286,19 +226,5 @@ contract AuthmanCrud {
         return keccak256(hash);
 
       }
-
-      function removeDashesFromSsn(string ssn) private returns (string) {
-
-        //removing dashes from ssn if any
-        var s = ssn.toSlice();
-        var delim = "-".toSlice();
-        string memory newSsn = "";
-        for(uint i = 0; i < s.count(delim) + 1; i++) {
-          newSsn = myString.strConcat(ssn, s.split(delim).toString());
-        }
-        return newSsn;
-
-      }
-
 
     }
