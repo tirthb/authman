@@ -1,55 +1,17 @@
 "titu","bhowmick","123","2000-12-31","1234","4085059233","titu bank","tb"
 "titu","bhowmick","123-45-6789","2000-12-31","1234","4085059233","titu bank","tb"
 
-var auth; Main.deployed().then(function(deployed){auth=deployed;});
-auth.createOrUpdateAuthmanGuid("titu","bhowmick","1234","2000-12-31","1234","4085059233","titu bank","tb").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message);});
-var ret; auth.createOrUpdateAuthmanGuid("titu","bhowmick","123456789","2000-12-31","1234","4085059233","titu bank","tb").then(function(o){ret = o;});
+var user; UserCrud.deployed().then(function(deployed){user=deployed;});
+var auth; AuthmanCrud.deployed().then(function(deployed){auth=deployed;});
+auth.getAuthmanCount();
+auth.isAuthman(0x1);
+auth.getAuthman(0x1);
+auth.getAuthman2(0x1);
+
+var auth; AuthmanSave.deployed().then(function(deployed){auth=deployed;});
+auth.createOrUpdateAuthman(0x1, "titu","bhowmick","1234","2000-12-31","1234","4085059233").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message);});
+auth.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234","4085059233").then(function(o){ret = o;});
 ret.logs[0].args
 ret.logs[1].args
 ret.logs[2].args
 ret.logs[3].args
-
-
-function logAuthman(o){
-	for (i = 0; i < o.logs.length; i++) { 
-	    console.log("================ log" + i + "================");
-
-	    if (logs[0].event == 'InfoAuthman') {
-
-	    	console.log("message: " + logs[0].args.message);
-        console.log("guid: " + logs[0].args.guid);
-        console.log("firstName: " + logs[0].args.firstName);
-        console.log("lastName: " + logs[0].args.lastName);
-        console.log("counter: " + logs[0].args.counter);
-        console.log("ssnHash: " + logs[0].args.ssnHash);
-        console.log("claimHash: " + logs[0].args.claimHash);
-        console.log("mobilePhone: " + logs[0].args.mobilePhone);
-
-	    }
-
-	    if (logs[0].event == 'InfoAuthman2') {
-
-	    	console.log("createByName: " + logs[0].args.createByName);
-        console.log("createDate: " + logs[0].args.createDate);
-        console.log("updateByName: " + logs[0].args.updateByName);
-        console.log("updateDate: " + logs[0].args.updateDate);
-        console.log("claimedDate: " + logs[0].args.claimedDate);
-        console.log("claimedAuthmanIdHash: " + logs[0].args.claimedAuthmanIdHash);
-        console.log("previousGuid: " + logs[0].args.previousGuid);
-        
-	    }
-	}
-}
-
-
-		  
-          authman.createByName,
-          authman.createById,
-          authman.createDate,
-          authman.updateByName,
-          authman.updateById,
-          authman.updateDate,
-          authman.isClaimed,
-          authman.claimedDate,
-          authman.claimedAuthmanIdHash,
-          authman.previousGuid

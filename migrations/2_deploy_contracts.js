@@ -1,11 +1,8 @@
-var AuthmanCrud = artifacts.require("./AuthmanCrud.sol");
-var AuthmanSave = artifacts.require("./AuthmanSave.sol");
-var AuthmanClaim = artifacts.require("./AuthmanClaim.sol");
-var MyTest = artifacts.require("./test/MyTest.sol");
-var MyNewTest = artifacts.require("./test/MyNewTest.sol");
+var AuthmanDao = artifacts.require("./AuthmanDao.sol");
+var AuthmanService = artifacts.require("./AuthmanService.sol");
+var UserCrud = artifacts.require("./helper/UserCrud.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(AuthmanCrud);
-  deployer.deploy(AuthmanSave);
-//  deployer.deploy(AuthmanClaim);
+  deployer.deploy(AuthmanDao);
+  deployer.deploy(AuthmanService);
 };
