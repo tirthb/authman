@@ -1,6 +1,6 @@
 pragma solidity ^0.4.6;
 
-import "./AuthmanDao.sol";
+import "./AuthmanData.sol";
 import "./helper/strings.sol";
 import "./helper/myString.sol";
 import "./helper/validator.sol";
@@ -9,10 +9,10 @@ contract AuthmanService {
 
   using strings for *;
 
-  AuthmanDao dao;
+  AuthmanData dao;
 
   function AuthmanService(address authmanCrudAddress) public {
-    dao = AuthmanDao(authmanCrudAddress);
+    dao = AuthmanData(authmanCrudAddress);
   }
 
   // Used for error handling.

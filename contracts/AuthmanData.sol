@@ -2,7 +2,22 @@
 
 pragma solidity ^0.4.6;
 
-contract AuthmanDao {
+contract AuthmanData {
+
+  address private owner;
+
+  function AuthmanData() {
+    owner = msg.sender;
+  }
+
+  modifier onlyOwner {
+    require (msg.sender == owner);
+    _;
+  }
+
+  function transferOwnership(address newOwner) onlyOwner {
+      owner = newOwner;
+  }
 
   struct Authman {
     uint index;
@@ -90,7 +105,7 @@ contract AuthmanDao {
     string lastName, 
     string mobilePhone, 
     bytes32 claimHash, 
-    address updateBy) returns (uint _index) {
+    address updateBy) public onlyOwner returns (uint _index) {
 
     if(!isAuthman(_address)) {
       AnyException("Invalid address.");
@@ -117,7 +132,7 @@ contract AuthmanDao {
     string mobilePhone, 
     address createBy, 
     bytes32 ssnHash, 
-    bytes32 claimHash) returns (uint _index) {
+    bytes32 claimHash) public onlyOwner returns (uint _index) {
 
     //new authman
     if (isAuthman(_address)) {
@@ -143,7 +158,7 @@ contract AuthmanDao {
   function claimAuthman(
     address _address, 
     bytes32 claimedAuthmanIdHash, 
-    string mobilePhone) {
+    string mobilePhone) public onlyOwner {
 
     //valid credentials
     authmanByAddress[_address].isClaimed = true;
