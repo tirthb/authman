@@ -1,8 +1,7 @@
-var AuthmanData = artifacts.require("./AuthmanData.sol");
-var AuthmanService = artifacts.require("./AuthmanService.sol");
-var UserCrud = artifacts.require("./helper/UserCrud.sol");
+var Adoption = artifacts.require("Adoption");
+var OwnershipFactory = artifacts.require("OwnershipFactory");
 
 module.exports = function(deployer) {
-  deployer.deploy(AuthmanData);
-  deployer.deploy(AuthmanService);
+  deployer.deploy(Adoption);
+  deployer.deploy(OwnershipFactory);
 };

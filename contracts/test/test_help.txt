@@ -1,12 +1,17 @@
 "titu","bhowmick","123","2000-12-31","1234","4085059233","titu bank","tb"
 "titu","bhowmick","123-45-6789","2000-12-31","1234","4085059233","titu bank","tb"
 
-var user; UserCrud.deployed().then(function(deployed){user=deployed;});
-var auth; AuthmanCrud.deployed().then(function(deployed){auth=deployed;});
+var auth; AuthmanData.deployed().then(function(deployed){auth=deployed;console.log("address: " + auth.address);});
+var service = AuthmanService.new(auth.address);
+auth.transferOwnership(service.address);
 auth.getAuthmanCount();
 auth.isAuthman(0x1);
 auth.getAuthman(0x1);
 auth.getAuthman2(0x1);
+
+var dao; TestDao.deployed().then(function(deployed){dao=deployed;console.log("address: " + dao.address);});
+var service = TestService.new(dao.address);
+dao.transferOwnership(service.address);
 
 var auth; AuthmanSave.deployed().then(function(deployed){auth=deployed;});
 auth.createOrUpdateAuthman(0x1, "titu","bhowmick","1234","2000-12-31","1234","4085059233").then(function(ret){console.log(ret.tx); console.log(ret.logs[0].args.message);});
@@ -15,3 +20,6 @@ ret.logs[0].args
 ret.logs[1].args
 ret.logs[2].args
 ret.logs[3].args
+
+
+var f; Factory.deployed().then(function(deployed){f=deployed;console.log("address: " + f.address);});

@@ -11,8 +11,8 @@ contract AuthmanService {
 
   AuthmanData dao;
 
-  function AuthmanService(address authmanCrudAddress) public {
-    dao = AuthmanData(authmanCrudAddress);
+  function AuthmanService(address authmanDataAddress) public {
+    dao = AuthmanData(authmanDataAddress);
   }
 
   // Used for error handling.
