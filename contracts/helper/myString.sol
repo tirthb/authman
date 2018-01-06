@@ -91,19 +91,6 @@ library myString {
     return string(b);
   }
 
-  function validateLength(bytes32 b, uint minLength, uint maxLength) 
-  constant public returns (bool) {
-
-    for (uint i = 0; i < 32; i++) {
-      if (i < minLength) {
-        if(b[i] == 0) return false;
-      }
-      if (i > maxLength - 1) {
-        if(b[i] != 0) return false;  
-      }
-    }
-    
-    return true;
-  }
+  
   
 }
