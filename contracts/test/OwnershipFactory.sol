@@ -61,7 +61,7 @@ contract OwnershipFactory is Owner {
     event LogServiceContract(address serviceAddress);
     
     function newService() public returns(address serviceContract)
-      {
+    {
         if (service != address(0)) {
             return service;
         }
@@ -76,8 +76,8 @@ contract OwnershipFactory is Owner {
         dao.transferOwnership(service);
 
         return service;
-      }
-      
+    }
+    
     function getData() returns (address _data) {
         return data;
     }

@@ -1,14 +1,8 @@
-//separate data and business logic
+pragma solidity ^0.4.17;
 
-pragma solidity ^0.4.6;
+import "./helper/Owner.sol";
 
-contract AuthmanData {
-
-  address private owner;
-
-  function AuthmanData() {
-    owner = msg.sender;
-  }
+contract AuthmanData is Owner {
 
   modifier onlyOwner {
     require (msg.sender == owner);
@@ -21,11 +15,11 @@ contract AuthmanData {
 
   struct Authman {
     uint index;
-    string firstName;
-    string lastName;
+    bytes32 firstName;
+    bytes32 lastName;
     bytes32 ssnHash;
     bytes32 claimHash;
-    string mobilePhone;
+    bytes32 mobilePhone;
     address createBy;
     uint createDate;
     address updateBy;
@@ -54,11 +48,11 @@ contract AuthmanData {
     string message, 
     address indexed authmanAddress, 
     uint index, 
-    string firstName,
-    string lastName,
+    bytes32 firstName,
+    bytes32 lastName,
     bytes32 ssnHash,
     bytes32 claimHash,
-    string mobilePhone);
+    bytes32 mobilePhone);
 
   event InfoAuthman2(
     address createBy,
@@ -101,9 +95,9 @@ contract AuthmanData {
 
   function updateAuthman(
     address _address, 
-    string firstName, 
-    string lastName, 
-    string mobilePhone, 
+    bytes32 firstName, 
+    bytes32 lastName, 
+    bytes32 mobilePhone, 
     bytes32 claimHash, 
     address updateBy) public onlyOwner returns (uint _index) {
 
@@ -127,9 +121,9 @@ contract AuthmanData {
 
   function createAuthman(
     address _address, 
-    string firstName, 
-    string lastName, 
-    string mobilePhone, 
+    bytes32 firstName, 
+    bytes32 lastName, 
+    bytes32 mobilePhone, 
     address createBy, 
     bytes32 ssnHash, 
     bytes32 claimHash) public onlyOwner returns (uint _index) {
@@ -158,7 +152,7 @@ contract AuthmanData {
   function claimAuthman(
     address _address, 
     bytes32 claimedAuthmanIdHash, 
-    string mobilePhone) public onlyOwner {
+    bytes32 mobilePhone) public onlyOwner {
 
     //valid credentials
     authmanByAddress[_address].isClaimed = true;
@@ -195,11 +189,11 @@ contract AuthmanData {
   constant
   returns(
     uint index,
-    string firstName,
-    string lastName,
+    bytes32 firstName,
+    bytes32 lastName,
     bytes32 ssnHash,
     bytes32 claimHash,
-    string mobilePhone
+    bytes32 mobilePhone
     )
   {
     if(!isAuthman(_address)) {
@@ -230,6 +224,7 @@ contract AuthmanData {
   {
     if(!isAuthman(_address)) {
       AnyException("Invalid address.");
+      revert();
     }
     return(
       authmanByAddress[_address].createBy,
@@ -249,6 +244,15 @@ contract AuthmanData {
   {
     return authmanIndex.length;
   }
+
+  function getAuthmanByIndex(uint index) 
+  public
+  constant
+  returns(address _address)
+  {
+    return authmanIndex[index];
+  }
+
 
   function getAuthmanAddressBySsnHash(bytes32 hash) returns (address _address) {
     return authmanAddressBySsnHash[hash];

@@ -3,7 +3,7 @@ pragma solidity ^0.4.17;
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/test/OwnershipFactory.sol";
-import "../contracts/test/ErrorProxy.sol";
+import "../contracts/helper/ErrorProxy.sol";
 
 contract TestOwnershipFactory {
 	OwnershipFactory factory = OwnershipFactory(DeployedAddresses.OwnershipFactory());
