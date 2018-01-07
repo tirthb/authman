@@ -66,8 +66,10 @@ contract OwnershipFactory is Owner {
             return service;
         }
         
-        data = new Dao();
-        LogDataContract(data);
+        if (data == address(0)) {
+            data = new Dao();
+            LogDataContract(data);
+        }
         
         service = new Service(data);
         LogServiceContract(service);

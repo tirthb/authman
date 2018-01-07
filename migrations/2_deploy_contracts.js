@@ -4,6 +4,6 @@ var AuthmanFactory = artifacts.require("AuthmanFactory");
 
 module.exports = function(deployer) {
   deployer.deploy(Adoption);
-  //deployer.deploy(OwnershipFactory);
+  deployer.deploy(OwnershipFactory);
   deployer.deploy(AuthmanFactory);
 };

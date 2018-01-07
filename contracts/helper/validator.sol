@@ -156,6 +156,7 @@ library validator {
     	return true;
     }
 
+		//TODO: clean up duplicate method in myString. Cannot import myString library becasue of duplicate library while deployment.
     function bytes32ToString (bytes32 x) constant internal returns (string) {
     	bytes memory bytesString = new bytes(32);
     	for (uint j=0; j<32; j++) {

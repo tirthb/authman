@@ -23,3 +23,7 @@ ret.logs[3].args
 
 
 var f; Factory.deployed().then(function(deployed){f=deployed;console.log("address: " + f.address);});
+var af; AuthmanFactory.deployed().then(function(deployed){af=deployed;console.log("address: " + af.address);});
+
+var of; OwnershipFactory.deployed().then(function(deployed){of=deployed;console.log("address: " + of.address);});
+var r;of.newService().then(function(r){r = r});

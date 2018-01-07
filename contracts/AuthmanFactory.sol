@@ -19,7 +19,7 @@ contract AuthmanFactory {
             return service;
         }
         
-        if (data != address(0)) {
+        if (data == address(0)) {
             data = new AuthmanData();
             LogDataContract(data);
         }
