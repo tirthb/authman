@@ -5,7 +5,7 @@ import "./myString.sol";
 library util {
 
 	function createClaimHash(address _address, bytes32 pin) constant internal returns (bytes32) {
-		return keccak256(myString.strConcat(myString.addressToString(_address), myString.bytes32ToString(pin)));
+		return keccak256(myString.addressToString(_address), myString.bytes32ToString(pin));
 	}
 
 	function createSsnHash(bytes32 ssn, bytes32 dob) constant internal returns (bytes32) {
