@@ -9,7 +9,7 @@ contract TestOwnershipFactory {
 	OwnershipFactory factory = OwnershipFactory(DeployedAddresses.OwnershipFactory());
 	address serviceAddress;
 
-	function beforeAll() {
+	/* function beforeAll() {
     serviceAddress = factory.newService();
   }
 
@@ -49,7 +49,7 @@ contract TestOwnershipFactory {
     bool r = proxy.execute.gas(300000)();
 
     Assert.isFalse(r, "Should be false, as it should throw");
-	}
+	} */
 
 
 }

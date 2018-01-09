@@ -8,7 +8,7 @@ contract TestAdoption {
 	Adoption adoption = Adoption(DeployedAddresses.Adoption());
 
 	// Testing the adopt() function
-	function testUserCanAdoptPet() public {
+	/* function testUserCanAdoptPet() public {
 		uint returnedId = adoption.adopt(8);
 
 		uint expected = 8;
@@ -35,6 +35,6 @@ contract TestAdoption {
 	  address[16] memory adopters = adoption.getAdopters();
 
 	  Assert.equal(adopters[8], expected, "Owner of pet ID 8 should be recorded.");
-	}
+	} */
 
 }

@@ -17,8 +17,7 @@ contract AuthmanClaimService {
   event AnyException(string message);
 
   //claiming authman from phone
-  function claimAuthmanId(
-    bytes32 authmanId,
+  function claimAuthman(
     bytes32 mobilePhone, 
     bytes32 pin, 
     bytes32 claimHash) public {
@@ -32,17 +31,6 @@ contract AuthmanClaimService {
     //validate pin 4 digits [0-9]{4}
     if (!validator.validatePin(pin)) {
       AnyException("Pin is not valid. Should be 4 digits.");
-      revert();
-    }
-
-    if (!validator.validateAuthmanId(authmanId)) {
-      revert();
-    }
-
-    bytes32 authmanIdHash = keccak256(authmanId);
-
-    if (dao.getAuthmanAddressByAuthmanIdHash(authmanIdHash) != address(0)) {
-      AnyException("Authman Id already in use. Try new authman Id.");
       revert();
     }
 
@@ -65,7 +53,7 @@ contract AuthmanClaimService {
       revert();
     }    
 
-    dao.claimAuthman(_address, authmanIdHash, mobilePhone);
+    dao.claimAuthman(_address, mobilePhone);
 
   }
 

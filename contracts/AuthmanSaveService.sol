@@ -46,7 +46,7 @@ contract AuthmanSaveService {
     }
 
     //if mobile phone exists, validate phone 10 digits [1-9][0-9]{9}
-    if (mobilePhone.length > 0 && !validator.validatePhone(mobilePhone)) {
+    if (mobilePhone != 0 && !validator.validatePhone(mobilePhone)) {
       AnyException("Mobile phone is not valid. Should be 10 digits with no other characters.");
       revert();
     }
@@ -105,7 +105,7 @@ public returns (uint index)
   ssn, 
   dob, 
   pin, 
-  "" //no mobile phone
+  0 //no mobile phone
   );
 }
 

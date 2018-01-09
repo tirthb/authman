@@ -26,13 +26,11 @@ contract AuthmanData is Owner {
     uint updateDate;
     bool isClaimed;
     uint claimedDate;
-    bytes32 claimedAuthmanIdHash;
   }
   
   mapping(address => Authman) internal authmanByAddress;
   mapping(bytes32 => address) internal authmanAddressBySsnHash;
   mapping(bytes32 => address) internal authmanAddressByClaimHash;
-  mapping(bytes32 => address) internal authmanAddressByAuthmanIdHash;
 
   address[] internal authmanIndex;
 
@@ -60,8 +58,7 @@ contract AuthmanData is Owner {
     address updateBy,
     uint updateDate,
     bool isClaimed,
-    uint claimedDate,
-    bytes32 claimedAuthmanIdHash);
+    uint claimedDate);
 
   function logAuthman(string message, address _address) public {
     logAuthman(message, authmanByAddress[_address]);
@@ -88,8 +85,7 @@ contract AuthmanData is Owner {
       authman.updateBy,
       authman.updateDate,
       authman.isClaimed,
-      authman.claimedDate,
-      authman.claimedAuthmanIdHash
+      authman.claimedDate
       );
   }
 
@@ -151,13 +147,11 @@ contract AuthmanData is Owner {
 
   function claimAuthman(
     address _address, 
-    bytes32 claimedAuthmanIdHash, 
     bytes32 mobilePhone) public onlyOwner {
 
     //valid credentials
     authmanByAddress[_address].isClaimed = true;
     authmanByAddress[_address].claimedDate = now;
-    authmanByAddress[_address].claimedAuthmanIdHash = claimedAuthmanIdHash;
     authmanByAddress[_address].mobilePhone = mobilePhone;
     saveAuthman(_address);
 
@@ -169,9 +163,6 @@ contract AuthmanData is Owner {
 
     if (authmanByAddress[_address].claimHash[0] > 0) {
       authmanAddressByClaimHash[authmanByAddress[_address].claimHash] = _address;
-    }
-    if (authmanByAddress[_address].claimedAuthmanIdHash[0] > 0) {
-      authmanAddressByAuthmanIdHash[authmanByAddress[_address].claimedAuthmanIdHash] = _address;
     }
   }
 
@@ -218,8 +209,7 @@ contract AuthmanData is Owner {
     address updateBy,
     uint updateDate,
     bool isClaimed,
-    uint claimedDate,
-    bytes32 claimedAuthmanIdHash
+    uint claimedDate
     )
   {
     if(!isAuthman(_address)) {
@@ -232,8 +222,7 @@ contract AuthmanData is Owner {
       authmanByAddress[_address].updateBy,
       authmanByAddress[_address].updateDate,
       authmanByAddress[_address].isClaimed,
-      authmanByAddress[_address].claimedDate,
-      authmanByAddress[_address].claimedAuthmanIdHash
+      authmanByAddress[_address].claimedDate
       );
   }
 
@@ -264,10 +253,6 @@ contract AuthmanData is Owner {
 
   function getIsClaimedByAddress(address _address) returns (bool isClaimed) {
     return authmanByAddress[_address].isClaimed;
-  }
-
-  function getAuthmanAddressByAuthmanIdHash(bytes32 hash) returns (address _address) {
-    return authmanAddressByAuthmanIdHash[hash];
   }
 
   function getAuthmanAddressByClaimHash(bytes32 hash) returns (address _address) {
