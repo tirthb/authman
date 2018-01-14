@@ -1,9 +1,7 @@
 pragma solidity ^0.4.6;
 
 import "./AuthmanData.sol";
-import "./AuthmanSaveService.sol";
-import "./AuthmanClaimService.sol";
-import "./AuthmanReadService.sol";
+import "./AuthmanService.sol";
 
 contract AuthmanFactory {
     
@@ -24,7 +22,7 @@ contract AuthmanFactory {
             LogDataContract(data);
         }
 
-        service = new AuthmanSaveService(data);
+        service = new AuthmanService(data);
         LogServiceContract(service);
 
         AuthmanData dao = AuthmanData(data);
@@ -32,7 +30,7 @@ contract AuthmanFactory {
 
         return service;
     }
-    
+
     function getData() returns (address _data) {
         return data;
     }
