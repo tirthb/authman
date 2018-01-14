@@ -12,9 +12,6 @@ contract AuthmanService {
     dao = AuthmanData(authmanDataAddress);
   }
 
-  // Used for Log.
-  event Log(string message);
-
   // Used for error handling.
   event AnyException(string message);
 
@@ -59,7 +56,7 @@ contract AuthmanService {
 
   address savedAddress = dao.getAuthmanAddressBySsnHash(hash);
 
-  bytes32 claimHash = util.createClaimHash(savedAddress, pin);
+  bytes32 claimHash = util.createClaimHash(_address, pin);
 
   //if authman exists for the ssn hash
   if (dao.getSsnHashByAddress(savedAddress)[0] != 0) {
@@ -80,11 +77,11 @@ contract AuthmanService {
  //if not claimed, update Authman
  dao.logAuthman("Authman exists but is not claimed. Updating authman.... Current authman: ", savedAddress);
 
- return dao.updateAuthman(savedAddress, firstName, lastName, mobilePhone, claimHash, tx.origin);
+ return dao.updateAuthman(_address, firstName, lastName, mobilePhone, claimHash, tx.origin);
 
  } else {
 
-  return dao.createAuthman(_address, firstName, lastName, mobilePhone, tx.origin, hash, claimHash);
+  return dao.createAuthman(_address, firstName, lastName, mobilePhone, claimHash, hash, tx.origin);
 }
 
 }
@@ -142,16 +139,14 @@ function claimAuthman(
     revert();
   }
 
-  Log("titu test");
-
   bytes32 newClaimHash = util.createClaimHash(_address, pin);
 
-  /* if (newClaimHash != claimHash) {
+  if (newClaimHash != claimHash) {
     AnyException("Pin is not valid.");
     revert();
   }
 
-  dao.claimAuthman(_address, mobilePhone);  */
+  dao.claimAuthman(_address, mobilePhone);
 
 }
 

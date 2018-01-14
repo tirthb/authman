@@ -101,8 +101,8 @@ contract TestAuthmanFactory {
 		bytes32 newMobilePhone = "2081234567";
 
 		service.claimAuthman(newMobilePhone, pin, _claimHash);
-		/* verifyAuthmanClaimByAddress(authmanAddress, newMobilePhone);
-		verifyAuthman2ClaimByAddress(authmanAddress); */
+		verifyAuthmanClaimByAddress(authmanAddress, newMobilePhone);
+		verifyAuthman2ClaimByAddress(authmanAddress);
 
 	}
 
@@ -183,7 +183,7 @@ contract TestAuthmanFactory {
 			ErrorProxy proxy = new ErrorProxy(address(dao)); //set Thrower as the contract to forward requests to. The target.
 
 			//prime the proxy.
-			AuthmanData(address(proxy)).createAuthman(0x1,"titu","bhowmick","123456789",tx.origin,0,0);
+			AuthmanData(address(proxy)).createAuthman(0x1,"titu","bhowmick","123456789",0,0,tx.origin);
 			//execute the call that is supposed to throw.
 			//r will be false if it threw. r will be true if it didn't.
 			//make sure you send enough gas for your contract method.

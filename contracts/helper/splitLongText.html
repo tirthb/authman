@@ -1,0 +1,43 @@
+<script>
+function splitToBytes32() {
+  var longText = document.forms["split"]["longText"].value;
+  longText = replaceAll(longText,'"','');
+  
+  var result = "";
+
+  if (longText.length <= 32) {
+  	result = '"'+longText+'"';
+  } else {
+    for (var i = 0; i < longText.length; i++) {
+      if (i == 0) {
+        result += '"';
+      } else if (i%32 == 0) {
+        result += '","';
+      }
+      result += longText.charAt(i);
+      if(i == longText.length - 1) {
+        result += '"';
+      }
+    }
+  }
+
+  document.getElementById("result").innerHTML = result;
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
+</script>
+<body>
+<form onsubmit="splitToBytes32();return false;" method="post" name="split">
+  <label>Long string: </label>
+  <input id="longText" name="longText" size="65">
+  <br/>
+  <br/>
+  <input type="submit" value="Split!">
+</form>
+<p id="result">
+
+</p>
+</body>

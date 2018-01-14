@@ -94,8 +94,9 @@ contract AuthmanData is Owner {
     bytes32 firstName, 
     bytes32 lastName, 
     bytes32 mobilePhone, 
-    bytes32 claimHash, 
-    address updateBy) public onlyOwner returns (uint _index) {
+    bytes32 claimHash,
+    address updateBy
+    ) public onlyOwner returns (uint _index) {
 
     if(!isAuthman(_address)) {
       AnyException("Invalid address.");
@@ -120,9 +121,10 @@ contract AuthmanData is Owner {
     bytes32 firstName, 
     bytes32 lastName, 
     bytes32 mobilePhone, 
-    address createBy, 
-    bytes32 ssnHash, 
-    bytes32 claimHash) public onlyOwner returns (uint _index) {
+    bytes32 claimHash,
+    bytes32 ssnHash,
+    address createBy
+    ) public onlyOwner returns (uint _index) {
 
     //new authman
     if (isAuthman(_address)) {
