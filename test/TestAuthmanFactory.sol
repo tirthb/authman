@@ -29,7 +29,7 @@ contract TestAuthmanFactory {
 	function testServiceCreateNoPhone() public {
 		
 		AuthmanService service = AuthmanService(serviceAddress);
-		uint _index = service.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234");
+		var (_index, errorCode) = service.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234");
 
 		if (dataAddress == address(0)) {
 			dataAddress = factory.getData();
@@ -48,7 +48,7 @@ contract TestAuthmanFactory {
 	function testServiceCreateWithPhone() public {
 		
 		AuthmanService service = AuthmanService(serviceAddress);
-		uint _index = service.createOrUpdateAuthman(0x2, "titu","bhowmick","223456789","2000-12-31","1234","4081234567");
+		var (_index, errorCode) = service.createOrUpdateAuthman(0x2, "titu","bhowmick","223456789","2000-12-31","1234","4081234567");
 
 		if (dataAddress == address(0)) {
 			dataAddress = factory.getData();
@@ -67,7 +67,7 @@ contract TestAuthmanFactory {
 	function testServiceUpdateWithPhone() public {
 		
 		AuthmanService service = AuthmanService(serviceAddress);
-		uint _index = service.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234","4081234567");
+		var (_index, errorCode) = service.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234","4081234567");
 
 		if (dataAddress == address(0)) {
 			dataAddress = factory.getData();
@@ -88,7 +88,7 @@ contract TestAuthmanFactory {
 		bytes32 pin = "1235";
 
 		AuthmanService service = AuthmanService(serviceAddress);
-		uint _index = service.createOrUpdateAuthman(0x3, "titu","bhowmick","323456789","2000-12-31", pin,"4081234567");
+		var (_index, errorCode) = service.createOrUpdateAuthman(0x3, "titu","bhowmick","323456789","2000-12-31", pin,"4081234567");
 		
 		if (dataAddress == address(0)) {
 			dataAddress = factory.getData();

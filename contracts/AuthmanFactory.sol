@@ -31,11 +31,11 @@ contract AuthmanFactory {
         return service;
     }
 
-    function getData() returns (address _data) {
+    function getData() constant returns (address _data) {
         return data;
     }
     
-    function getService() returns (address _service) {
+    function getService() constant returns (address _service) {
         return service;
     }
     

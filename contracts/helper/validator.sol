@@ -2,8 +2,12 @@ pragma solidity ^0.4.17;
 
 library validator {
 
+  event AnyException(bytes32 m);
+  event AnyException(bytes32 m1, bytes32 m2);
+  event AnyException(bytes32 m1, bytes32 m2, bytes32 m3);
+
 	//[0-9]{4}
-	function validatePin(bytes32 b) constant internal returns (bool){
+  function validatePin(bytes32 b) constant internal returns (bool){
 
 		if (!validateLength(b, 4, 4)) {
 			return false;
@@ -15,6 +19,14 @@ library validator {
 		}
 
 		return true;
+	}
+
+	function validatePinWithEvent(bytes32 b) constant internal returns (bool){
+		bool result = validatePin(b);
+		if (!result) {
+			AnyException("Pin is not valid. Should be 4 di","gits.");
+		}
+		return result;
 	}
 
 	function validatePhone(bytes32 b) constant internal returns (bool){
@@ -31,6 +43,14 @@ library validator {
 		}
 
 		return true;
+	}
+
+	function validatePhoneWithEvent(bytes32 b) constant internal returns (bool){
+		bool result = validatePhone(b);
+		if (!result) {
+			AnyException("Mobile phone is not valid. Shoul","d be 10 digits with no other cha","racters.");
+		}
+		return result;
 	}
 
 	//[1-2][0-9]{3}\-[0-1][0-9]\-[0-3][0-9]
@@ -63,6 +83,14 @@ library validator {
 		return true;
 	}
 
+	function validateDobWithEvent(bytes32 b) constant internal returns (bool){
+		bool result = validateDob(b);
+		if (!result) {
+			AnyException("Date of birth is not valid. Shou","ld be of the format YYYY-MM-DD");
+		}
+		return result;
+	}
+
 	//https://regex101.com/r/rP8wL0/1 ^(?!(000|666|9))\d{3}(?!00)\d{2}(?!0000)\d{4}$
 	//123456789
 	function validateSsn(bytes32 b) constant internal returns (bool){
@@ -91,6 +119,14 @@ library validator {
 		if(b[5] == 48 && b[6] == 48 && b[7] == 48 && b[8] == 48) return false;
 
 		return true;
+	}
+
+	function validateSsnWithEvent(bytes32 b) constant internal returns (bool){
+		bool result = validateSsn(b);
+		if (!result) {
+			AnyException("SSN is not valid.");
+		}
+		return result;
 	}
 
 	/*
