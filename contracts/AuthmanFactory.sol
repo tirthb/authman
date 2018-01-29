@@ -14,13 +14,15 @@ contract AuthmanFactory {
     function newService() public returns(address serviceContract)
     {
         if (service != address(0)) {
+            LogServiceContract(service);
             return service;
         }
         
         if (data == address(0)) {
             data = new AuthmanData();
-            LogDataContract(data);
         }
+
+        LogDataContract(data);
 
         service = new AuthmanService(data);
         LogServiceContract(service);
