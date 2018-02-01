@@ -29,7 +29,7 @@ contract TestAuthmanFactory {
 	function testServiceCreateNoPhone() public {
 		
 		AuthmanService service = AuthmanService(serviceAddress);
-		var (_index, errorCode) = service.createOrUpdateAuthman(0x1, "titu","bhowmick","123456789","2000-12-31","1234");
+		var (_index, errorCode) = service.createOrUpdateAuthmanNoPhone(0x1, "titu","bhowmick","123456789","2000-12-31","1234");
 
 		if (dataAddress == address(0)) {
 			dataAddress = factory.getData();

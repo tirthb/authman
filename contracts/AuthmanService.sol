@@ -87,7 +87,7 @@ contract AuthmanService {
 }
 
 //mobile phone is optional as banks may not have this information for current customers
-function createOrUpdateAuthman(
+function createOrUpdateAuthmanNoPhone(
  address _address,
  bytes32 firstName, 
  bytes32 lastName, 

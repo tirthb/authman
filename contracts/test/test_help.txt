@@ -24,6 +24,10 @@ ret.logs[3].args
 
 var f; Factory.deployed().then(function(deployed){f=deployed;console.log("address: " + f.address);});
 var af; AuthmanFactory.deployed().then(function(deployed){af=deployed;console.log("address: " + af.address);});
+af.newService().then(function(o){ret = o;});
+var service = AuthmanService.at('0xa5224aa55ba1c53cd4f1ff962b5da7fee9aab288');
+var accounts;web3.eth.getAccounts(function(err,res) { accounts = res; });
+var ret;service.createOrUpdateAuthman('0x1', "titu","bhowmick","123456789","2000-12-31","1234", {from: accounts[0]}).then(function(inst){ret = inst;});
 
 var of; OwnershipFactory.deployed().then(function(deployed){of=deployed;console.log("address: " + of.address);});
 var r;of.newService().then(function(r){r = r});
